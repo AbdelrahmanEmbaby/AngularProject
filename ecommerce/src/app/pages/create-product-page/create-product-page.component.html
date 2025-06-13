@@ -1,0 +1,13 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h1 class="card-title text-2xl font-bold mb-6">Create New
+                Product</h1>
+
+            <ec-product-form
+                (create)="handleSubmit($event)"
+                (cancel)="handleCancel()">
+            </ec-product-form>
+        </div>
+    </div>
+</div>

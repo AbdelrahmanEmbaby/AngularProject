@@ -1,0 +1,23 @@
+<section class="pt-25 px-10 pb-6 bg-base-200 min-h-screen">
+    <div>
+        <div class="card bg-base-100 shadow-xl">
+          <div class="card-body">
+            <h1 class="card-title text-2xl font-bold mb-6">Edit Product</h1>
+            
+            @if (product.name) {
+              <ec-product-form
+                [product]="product"
+                [isEditing]="true"
+                (update)="handleSubmit($event)"
+                (cancel)="handleCancel()">
+              </ec-product-form>
+            } @else {
+              <div class="flex flex-col items-center justify-center py-12">
+                <span class="loading loading-spinner loading-lg text-primary"></span>
+                <p class="mt-4 text-gray-600">Loading product details...</p>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+</section>

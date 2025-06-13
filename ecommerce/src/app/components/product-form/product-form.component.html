@@ -1,0 +1,127 @@
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text">Product Name</span>
+            @if (productForm.get('name')?.invalid &&
+            productForm.get('name')?.touched) {
+            <span class="label-text-alt text-error">Name is required (min 3
+                chars)</span>
+            }
+        </label>
+        <input
+            type="text"
+            formControlName="name"
+            [class.input-error]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
+            class="input input-bordered w-full">
+    </div>
+
+    <div class="form-control flex flex-col">
+        <label class="label">
+            <span class="label-text">Description</span>
+        </label>
+        <textarea
+            formControlName="description"
+            class="textarea textarea-bordered h-24"></textarea>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Price ($)</span>
+                @if (productForm.get('price')?.invalid &&
+                productForm.get('price')?.touched) {
+                <span class="label-text-alt text-error">Must be ≥ 0</span>
+                }
+            </label>
+            <input
+                type="number"
+                formControlName="price"
+                min="0"
+                step="0.01"
+                [class.input-error]="productForm.get('price')?.invalid && productForm.get('price')?.touched"
+                class="input input-bordered w-full">
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text">Discount (%)</span>
+                @if (productForm.get('discount')?.invalid &&
+                productForm.get('discount')?.touched) {
+                <span class="label-text-alt text-error">Must be 0-100</span>
+                }
+            </label>
+            <input
+                type="number"
+                formControlName="discount"
+                min="0"
+                max="100"
+                [class.input-error]="productForm.get('discount')?.invalid && productForm.get('discount')?.touched"
+                class="input input-bordered w-full">
+        </div>
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text">Quantity in Stock</span>
+            @if (productForm.get('quantity')?.invalid &&
+            productForm.get('quantity')?.touched) {
+            <span class="label-text-alt text-error">Must be ≥ 0</span>
+            }
+        </label>
+        <input
+            type="number"
+            formControlName="quantity"
+            min="0"
+            [class.input-error]="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched"
+            class="input input-bordered w-full">
+    </div>
+
+    <div class="form-control">
+        <label class="label">
+            <span class="label-text">Product Images</span>
+        </label>
+        <div class="flex gap-2">
+            <input
+                type="text"
+                [formControl]="newImageUrl"
+                placeholder="Image URL"
+                class="input input-bordered flex-grow">
+            <button
+                type="button"
+                (click)="addImage()"
+                class="btn btn-primary">
+                Add
+            </button>
+        </div>
+
+        <div class="mt-4 grid grid-cols-3 gap-2">
+            @for (image of images.controls; track $index) {
+            <div class="relative">
+                <img [src]="image.value" alt="Product image"
+                    class="h-50 w-full object-cover rounded">
+                <button
+                    type="button"
+                    (click)="removeImage($index)"
+                    class="absolute top-1 right-1 btn btn-xs btn-circle btn-error">
+                    ×
+                </button>
+            </div>
+            }
+        </div>
+    </div>
+
+    <div class="flex justify-end gap-4 pt-6">
+        <button
+            type="button"
+            (click)="onCancel()"
+            class="btn btn-outline">
+            Cancel
+        </button>
+        <button
+            type="submit"
+            [disabled]="productForm.invalid"
+            class="btn btn-primary">
+            {{ isEditing ? 'Update Product' : 'Create Product' }}
+        </button>
+    </div>
+</form>

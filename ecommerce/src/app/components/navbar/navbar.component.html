@@ -1,0 +1,213 @@
+<div
+    class="navbar justify-between py-3 bg-white/20 backdrop-blur-xl shadow fixed top-0 left-0 right-0 z-50 w-full">
+    <div class="flex-1">
+        <a routerLink="/{{routeEnum.Home}}"
+            class="btn btn-ghost normal-case text-xl">
+            <span>{{ getTitle() }}</span>
+        </a>
+    </div>
+
+    <div *ngIf="auth.isLoggedIn()" class="flex-2 hidden md:flex justify-center">
+        <div class="form-control w-full">
+            <div class="input-group flex">
+                <div class="input input-bordered w-full bg-transparent">
+                    <input type="text" [(ngModel)]="searchQuery"
+                        placeholder="Search..."
+                        (keyup.enter)="onSearch(); setToggle(false)" />
+                    <button *ngIf="searchQuery" (click)="clearSearch()"
+                        class="w-fit h-fit btn btn-square bg-transparent border-none outline-none shadow-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                            fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <button
+                    class="btn btn-square bg-transparent border-none outline-none shadow-none"
+                    (click)="onSearch()">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <nav class="hidden md:flex items-center justify-end space-x-4">
+        <ul class="menu menu-horizontal px-1 space-x-2">
+            <li><a routerLink="/{{routeEnum.Home}}"
+                    routerLinkActive="active">Home</a></li>
+            <li><a routerLink="/{{routeEnum.About}}"
+                    routerLinkActive="active">About</a></li>
+            <ng-container *ngIf="!auth.isLoggedIn()">
+                <li><a
+                        class="bg-primary text-white hover:bg-primary-content hover:text-primary"
+                        routerLink="/{{routeEnum.Login}}"
+                        routerLinkActive="active">Login</a></li>
+                <li><a
+                        class="bg-primary text-white hover:bg-primary-content hover:text-primary"
+                        routerLink="/{{routeEnum.Register}}"
+                        routerLinkActive="active">Register</a></li>
+            </ng-container>
+            <ng-container *ngIf="auth.isLoggedIn()">
+                <li><a routerLink="/{{routeEnum.Products}}"
+                        routerLinkActive="active">Products</a></li>
+            </ng-container>
+        </ul>
+
+        <ng-container *ngIf="auth.isLoggedIn()">
+            <div class="relative">
+                <button
+                    class="cursor-pointer flex items-center space-x-2 profile-button"
+                    (click)="setProfileMenuToggle(true)">
+                    <div class="avatar">
+                        <div class="w-10 rounded-full">
+                            @if (user && user.profilePicture) {
+                            <img [src]="user.profilePicture"
+                                alt="{{user.name}}" />
+                            }@else {
+                            <img
+                                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                alt="User" />
+                            }
+                        </div>
+                    </div>
+                </button>
+
+                <div *ngIf="isProfileMenuOpen"
+                    class="absolute right-0 mt-2 w-48 bg-base-100 rounded-md shadow-lg py-1 z-50">
+                    <a routerLink="/{{routeEnum.Cart}}"
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        (click)="closeAllMenus()">Cart</a>
+                    <a routerLink="/{{routeEnum.Profile}}"
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        (click)="closeAllMenus()">Profile</a>
+                    <a (click)="logout()"
+                        class="block px-4 py-2 text-sm bg-error text-white hover:bg-error-content hover:text-error cursor-pointer">Logout</a>
+                </div>
+            </div>
+        </ng-container>
+    </nav>
+
+    <div class="flex-none md:hidden">
+        <button class="btn btn-square btn-ghost" (click)="setToggle(true)">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </div>
+
+    <div
+        class="fixed inset-0 bg-base-100 z-40 transition-all duration-300 ease-in-out h-[100vh] transform"
+        [ngClass]="{'translate-x-0': isMenuOpen, 'translate-x-full': !isMenuOpen}">
+        <div
+            class="flex flex-col items-center justify-center h-full space-y-8 p-4">
+            <button class="absolute top-4 right-4 btn btn-circle btn-ghost"
+                (click)="setToggle(false)">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            <ng-container *ngIf="auth.isLoggedIn()">
+                <div class="avatar mb-4">
+                    <div class="w-24 rounded-full">
+                        @if (user && user.profilePicture) {
+                        <img [src]="user.profilePicture"
+                            alt="{{user.name}}" />
+                        }@else {
+                        <img
+                            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                            alt="User" />
+                        }
+                    </div>
+                </div>
+
+                <div class="w-full max-w-md">
+                    <div class="form-control">
+                        <div class="input-group flex">
+                            <div
+                                class="input input-bordered w-full bg-transparent">
+                                <input type="text" [(ngModel)]="searchQuery"
+                                    placeholder="Search..."
+                                    (keyup.enter)="onSearch(); setToggle(false)" />
+                                <button *ngIf="searchQuery"
+                                    (click)="clearSearch()"
+                                    class="w-fit h-fit btn btn-square bg-transparent border-none shadow-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor">
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <button
+                                class="btn btn-square bg-transparent border-none shadow-none"
+                                (click)="onSearch(); setToggle(false)">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="h-6 w-6" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round"
+                                        stroke-linejoin="round" stroke-width="2"
+                                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <nav class="w-full">
+                <ul class="w-full menu menu-vertical space-y-4 items-center">
+                    <li><a routerLink="/{{routeEnum.Home}}"
+                            routerLinkActive="active"
+                            (click)="closeAllMenus()">Home</a></li>
+                    <li><a routerLink="/{{routeEnum.About}}"
+                            routerLinkActive="active"
+                            (click)="closeAllMenus()">About</a></li>
+
+                    <ng-container *ngIf="!auth.isLoggedIn()">
+                        <li><a
+                                class="bg-primary text-white hover:bg-primary-content hover:text-primary"
+                                routerLink="/{{routeEnum.Login}}"
+                                routerLinkActive="active"
+                                (click)="closeAllMenus()">Login</a></li>
+                        <li><a
+                                class="bg-primary text-white hover:bg-primary-content hover:text-primary"
+                                routerLink="/{{routeEnum.Register}}"
+                                routerLinkActive="active"
+                                (click)="closeAllMenus()">Register</a></li>
+                    </ng-container>
+
+                    <ng-container *ngIf="auth.isLoggedIn()">
+                        <li><a routerLink="/{{routeEnum.Products}}"
+                                routerLinkActive="active"
+                                (click)="closeAllMenus()">Products</a></li>
+                        <li><a routerLink="/{{routeEnum.Cart}}"
+                                routerLinkActive="active"
+                                (click)="closeAllMenus()">Cart</a></li>
+                        <li><a routerLink="/{{routeEnum.Profile}}"
+                                routerLinkActive="active"
+                                (click)="closeAllMenus()">Profile</a></li>
+                        <li><a
+                                class="bg-error text-white hover:bg-error-content hover:text-error"
+                                (click)="logout()">Logout</a></li>
+                    </ng-container>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

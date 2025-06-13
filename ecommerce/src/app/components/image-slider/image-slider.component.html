@@ -1,0 +1,48 @@
+<div class="relative">
+    <div
+        #sliderContainer
+        class="flex space-x-2 overflow-x-auto py-2"
+        (mousedown)="startDrag($event)"
+        (touchstart)="startDrag($event)"
+        (mousemove)="onDrag($event)"
+        (touchmove)="onDrag($event)"
+        (mouseup)="stopDrag()"
+        (mouseleave)="stopDrag()"
+        (touchend)="stopDrag()">
+        @for (image of images; track $index) {
+        <button
+            (click)="selectImage($index, $event)"
+            [class.border-2]="currentIndex === $index"
+            [class.border-primary]="currentIndex === $index"
+            class="flex-shrink-0 rounded-md overflow-hidden bg-gray-100 h-20 w-20 cursor-pointer">
+            <img
+                [src]="image"
+                alt="Thumbnail {{ $index + 1 }}"
+                class="w-full h-full object-cover select-none">
+        </button>
+        }
+    </div>
+
+    @if (images.length > 4) {
+    <button
+        (click)="scroll(-1)"
+        class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+            viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+        </svg>
+    </button>
+    <button
+        (click)="scroll(1)"
+        class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 rounded-full p-2 shadow-md hover:bg-white cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+            viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd" />
+        </svg>
+    </button>
+    }
+</div>

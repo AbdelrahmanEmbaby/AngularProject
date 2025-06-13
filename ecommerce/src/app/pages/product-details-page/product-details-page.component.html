@@ -1,0 +1,149 @@
+<section class="pt-30 bg-base-200 min-h-screen">
+  <dialog #deleteDialog class="modal">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Delete Product</h3>
+      <p class="py-4">Are you sure you want to delete {{product?.name}}? This
+        action cannot be undone.</p>
+      <div class="modal-action">
+        <button
+          (click)="closeDeleteDialog()"
+          class="btn btn-outline">
+          Cancel
+        </button>
+        <button
+          (click)="confirmDelete()"
+          class="cursor-pointer px-4 py-2 bg-error text-white rounded-md hover:bg-error-content hover:text-error transition-colors">
+          Delete
+        </button>
+      </div>
+    </div>
+
+    <form method="dialog" class="modal-backdrop">
+      <button (click)="closeDeleteDialog()">close</button>
+    </form>
+  </dialog>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    @if (loading) {
+    <div class="flex justify-center items-center h-64">
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+    </div>
+    } @else if (product) {
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+      @if (isAdmin) {
+      <div class="flex justify-end gap-3 p-4 border-b border-gray-200">
+        <a
+          [routerLink]="['/', routeEnum.Product, routeEnum.ProductEdit, product.id]"
+          class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-content hover:text-primary transition-colors">
+          Edit Product
+        </a>
+        <button
+          (click)="openDeleteDialog()"
+          class="cursor-pointer px-4 py-2 bg-error text-white rounded-md hover:bg-error-content hover:text-error transition-colors">
+          Delete Product
+        </button>
+      </div>
+      }
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
+        <div>
+          <div class="rounded-lg overflow-hidden bg-gray-100 h-[400px]">
+            <img
+              [src]="product.images[currentImageIndex]"
+              [alt]="product.name"
+              class="w-full h-full object-cover">
+          </div>
+
+          @if (product.images.length > 1) {
+          <ec-image-slider
+            [images]="product.images"
+            [currentIndex]="currentImageIndex"
+            (imageSelected)="changeImage($event)"
+            class="mt-4">
+          </ec-image-slider>
+          }
+        </div>
+
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ product.name
+            }}</h1>
+
+          @if (product.discount > 0) {
+          <div class="flex items-center gap-4 mb-4">
+            <span class="text-2xl font-bold text-gray-900">
+              ${{ getDiscountedPrice(product.price, product.discount) |
+              number:'1.2-2' }}
+            </span>
+            <span class="text-lg text-gray-500 line-through">
+              ${{ product.price | number:'1.2-2' }}
+            </span>
+            <span
+              class="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded">
+              {{ product.discount }}% OFF
+            </span>
+          </div>
+          } @else {
+          <div class="text-2xl font-bold text-gray-900 mb-4">
+            ${{ product.price | number:'1.2-2' }}
+          </div>
+          }
+
+          @if (product.description) {
+          <div class="prose max-w-none text-gray-700 mb-6">
+            <p class="whitespace-pre-line">{{ product.description }}</p>
+          </div>
+          }
+
+          <div class="mt-6 flex items-center gap-4">
+            <span class="text-gray-700 font-medium">Quantity:</span>
+            <div class="flex items-center border border-gray-300 rounded-md">
+              <button
+                (click)="decreaseQuantity()"
+                [disabled]="quantity <= 1"
+                class="px-3 py-1 text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                -
+              </button>
+              <span class="px-4 py-1 border-x border-gray-300">
+                {{ quantity }}
+              </span>
+              <button
+                (click)="increaseQuantity()"
+                [disabled]="quantity >= getMaxAvailableQuantity()"
+                class="px-3 py-1 text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed">
+                +
+              </button>
+            </div>
+            <span class="text-sm text-gray-500">
+              @if (getMaxAvailableQuantity() > 0) {
+              {{ getMaxAvailableQuantity() }} available ({{ product.quantity }}
+              total)
+              } @else {
+              <span class="text-red-500">No more available</span>
+              }
+            </span>
+          </div>
+
+          <div class="mt-6 border-t border-gray-200 pt-6">
+            <button
+              (click)="addToCart()"
+              [disabled]="product.quantity <= 0 || addingToCart"
+              class="w-full cursor-pointer bg-primary hover:bg-indigo-800 text-white py-3 px-4 rounded-md font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2">
+              @if (addingToCart) {
+              <span class="loading loading-spinner loading-sm"></span>
+              }
+              {{ product.quantity > 0 ? 'Add to Cart' : 'Out of Stock' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    } @else {
+    <div class="text-center py-12">
+      <h2 class="text-xl font-medium text-gray-900">Product not found</h2>
+      <p class="mt-2 text-gray-600">The product you're looking for doesn't
+        exist.</p>
+    </div>
+    }
+  </div>
+</section>
