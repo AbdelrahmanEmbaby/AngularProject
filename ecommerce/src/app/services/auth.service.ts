@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { API_URL_TOKEN } from '../configs/tokens.config';
-import { IUser, IUserResponse } from '../interfaces/user.interface';
+import { IUser, IUserRequest, IUserResponse } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -47,7 +47,7 @@ export class AuthService {
       );
   }
 
-  register(user: IUser): Observable<IUserResponse> {
+  register(user: IUserRequest): Observable<IUserResponse> {
     return this.http.post<IUserResponse>(`${this.apiUrl}/register`, user).pipe(
       map((user) => {
         localStorage.setItem('user', JSON.stringify(user));

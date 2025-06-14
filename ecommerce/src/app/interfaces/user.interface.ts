@@ -1,6 +1,7 @@
 import { Gender } from "../enums/gender.enum";
 
 export interface IUser {
+    id: number;
     email: string;
     password: string;
     name: string;
@@ -12,6 +13,8 @@ export interface IUser {
     isDeleted: boolean;
     roles: string[];
 }
+
+export interface IUserRequest extends Omit<IUser, 'id'>{}
 
 export interface IUserResponse {
     accessToken: string;

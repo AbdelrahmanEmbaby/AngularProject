@@ -12,10 +12,14 @@ import { AboutPageComponent } from './pages/about-page/about-page.component';
 import { ProductsPageComponent } from './pages/products-page/products-page.component';
 import { ProductDetailsPageComponent } from './pages/product-details-page/product-details-page.component';
 import { CartPageComponent } from './pages/cart-page/cart-page.component';
-// enums
-import { RouteEnum } from './enums/route.enum';
 import { EditProductPageComponent } from './pages/edit-product-page/edit-product-page.component';
 import { CreateProductPageComponent } from './pages/create-product-page/create-product-page.component';
+import { OrdersPageComponent } from './pages/orders-page/orders-page.component';
+import { OrderDetailsPageComponent } from './pages/order-details-page/order-details-page.component';
+import { UserOrdersComponent } from './pages/user-orders/user-orders.component';
+import { ProfileComponent } from './pages/profile-page/profile-page.component';
+// enums
+import { RouteEnum } from './enums/route.enum';
 
 export const routes: Routes = [
   {
@@ -49,8 +53,28 @@ export const routes: Routes = [
         data: { protection: RouteProtection.AdminOnly },
       },
       {
+        path: RouteEnum.Orders,
+        component: OrdersPageComponent,
+        data: { protection: RouteProtection.AdminOnly },
+      },
+      {
+        path: RouteEnum.Order + '/:id',
+        component: OrderDetailsPageComponent,
+        data: { protection: RouteProtection.AdminOnly },
+      },
+      {
         path: RouteEnum.Cart,
         component: CartPageComponent,
+        data: { protection: RouteProtection.Protected },
+      },
+      {
+        path: RouteEnum.Me + '/' + RouteEnum.Orders,
+        component: UserOrdersComponent,
+        data: { protection: RouteProtection.Protected },
+      },
+      {
+        path: RouteEnum.Me + '/' + RouteEnum.Profile,
+        component: ProfileComponent,
         data: { protection: RouteProtection.Protected },
       },
       {

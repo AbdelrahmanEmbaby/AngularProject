@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ICart, ICartItem } from '../interfaces/cart.interface';
 import { IProductResponse } from '../interfaces/product.interface';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, Observable } from 'rxjs';
 import { API_URL } from '../configs/constants.config';
 
 @Injectable({
@@ -30,6 +30,12 @@ export class CartService {
     } catch (error) {
       console.error('Error fetching cart:', error);
     }
+  }
+
+  clearCart(cartId: number): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/carts/${cartId}`, {
+      items: [],
+    });
   }
 
   private async createCart(userId: number): Promise<ICart> {

@@ -1,0 +1,67 @@
+<section class="min-h-screen pt-30 pb-12 bg-gradient-to-br from-gray-50 to-indigo-50 relative overflow-hidden">
+  <div class="absolute inset-0 z-0 overflow-hidden">
+    <div class="absolute top-0 left-0 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+    <div class="absolute top-0 right-0 w-64 h-64 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+    <div class="absolute bottom-0 left-1/2 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
+  </div>
+
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="text-center mb-16">
+      <h1 class="text-5xl font-extrabold text-gray-900 mb-4">
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-500">My Orders</span>
+      </h1>
+      <div class="w-24 h-1 bg-gradient-to-r from-indigo-500 to-blue-400 mx-auto rounded-full"></div>
+    </div>
+
+    <div class="space-y-8">
+      <div *ngFor="let order of orders" class="bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md hover:border-indigo-100 hover:translate-y-[-2px]">
+        <div class="flex flex-col gap-4 p-5">
+          <div class="flex justify-between items-center">
+            <h2 class="text-lg font-semibold text-gray-900">Order #{{ order.id }}</h2>
+            <span class="px-3 py-1 rounded-full text-xs font-medium text-white" [ngClass]="getStatusClass(order.status)">{{ order.status | titlecase }}</span>
+          </div>
+
+          <div class="divide-y divide-gray-200">
+            <div *ngFor="let item of order.items" class="flex flex-col sm:flex-row gap-4 py-4">
+              <div class="relative w-full sm:w-32 h-32 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                <img *ngIf="getProductImage(item)" [src]="getProductImage(item)" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                <div *ngIf="!getProductImage(item)" class="w-full h-full flex items-center justify-center text-gray-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="flex-1 flex flex-col justify-between">
+                <h3 class="text-lg font-semibold text-gray-900 hover:text-indigo-600 transition cursor-pointer">{{ getProductName(item) }}</h3>
+                <div class="mt-2 flex items-center space-x-2">
+                  <span class="text-lg font-bold text-indigo-600">${{ item.price | number:'1.2-2' }}</span>
+                  <span *ngIf="item.discount" class="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">{{ item.discount }}% OFF</span>
+                </div>
+                <div class="text-sm text-gray-500 mt-1">Quantity: {{ item.quantity }}</div>
+                <div class="text-sm font-medium text-indigo-600">Subtotal: ${{ getSubtotal(item) | number:'1.2-2' }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 flex justify-between items-center border-t border-gray-200">
+            <div class="text-sm text-gray-600">{{ order.items.length }} item{{ order.items.length > 1 ? 's' : '' }}</div>
+            <div class="text-lg font-bold text-indigo-600">Total: ${{ getOrderTotal(order) | number:'1.2-2' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="orders.length === 0" class="max-w-md mx-auto text-center py-16 px-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-100">
+      <div class="w-24 h-24 mx-auto mb-6 flex items-center justify-center bg-indigo-50 rounded-full text-indigo-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-900 mb-3">No orders found</h2>
+      <p class="text-gray-600 mb-6">You haven't placed any orders yet.</p>
+      <a routerLink="/products" class="inline-block px-8 py-3 bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-medium rounded-lg shadow-md hover:shadow-lg hover:from-indigo-700 hover:to-blue-600 transition-all duration-300">Browse Products</a>
+    </div>
+
+  </div>
+</section>

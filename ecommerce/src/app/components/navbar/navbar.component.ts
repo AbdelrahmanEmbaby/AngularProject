@@ -38,6 +38,10 @@ export class NavbarComponent {
     return this.titleService.getTitle();
   }
 
+  toggleProfileMenu() {
+    this.isProfileMenuOpen = !this.isProfileMenuOpen;
+  }
+
   setProfileMenuToggle(state: boolean) {
     this.isProfileMenuOpen = state;
   }

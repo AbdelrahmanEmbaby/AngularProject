@@ -19,7 +19,7 @@ export class ProductsService {
   }
 
   updateProduct(id: number, product: IUpdateProduct): Observable<IProductResponse> {
-    return this.http.put<IProductResponse>(
+    return this.http.patch<IProductResponse>(
       `${this.api_url}/products/${id}`,
       product
     );

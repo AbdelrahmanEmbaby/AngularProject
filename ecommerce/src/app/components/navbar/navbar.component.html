@@ -57,6 +57,8 @@
             <ng-container *ngIf="auth.isLoggedIn()">
                 <li><a routerLink="/{{routeEnum.Products}}"
                         routerLinkActive="active">Products</a></li>
+                <li *ngIf="auth.isAdmin()"><a routerLink="/{{routeEnum.Orders}}"
+                        routerLinkActive="active">Orders</a></li>
             </ng-container>
         </ul>
 
@@ -64,7 +66,7 @@
             <div class="relative">
                 <button
                     class="cursor-pointer flex items-center space-x-2 profile-button"
-                    (click)="setProfileMenuToggle(true)">
+                    (click)="toggleProfileMenu()">
                     <div class="avatar">
                         <div class="w-10 rounded-full">
                             @if (user && user.profilePicture) {
@@ -84,7 +86,10 @@
                     <a routerLink="/{{routeEnum.Cart}}"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         (click)="closeAllMenus()">Cart</a>
-                    <a routerLink="/{{routeEnum.Profile}}"
+                    <a routerLink="/{{routeEnum.Me}}/{{routeEnum.Orders}}"
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My
+                        Orders</a>
+                    <a routerLink="/{{routeEnum.Me}}/{{routeEnum.Profile}}"
                         class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         (click)="closeAllMenus()">Profile</a>
                     <a (click)="logout()"
@@ -196,6 +201,9 @@
                         <li><a routerLink="/{{routeEnum.Products}}"
                                 routerLinkActive="active"
                                 (click)="closeAllMenus()">Products</a></li>
+                        <li *ngIf="auth.isAdmin()"><a
+                                routerLink="/{{routeEnum.Orders}}"
+                                routerLinkActive="active">Orders</a></li>
                         <li><a routerLink="/{{routeEnum.Cart}}"
                                 routerLinkActive="active"
                                 (click)="closeAllMenus()">Cart</a></li>

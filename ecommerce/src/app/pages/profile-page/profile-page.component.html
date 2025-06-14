@@ -1,0 +1,48 @@
+<section
+    class="min-h-screen flex flex-col justify-center bg-gradient-to-br from-gray-50 to-indigo-50 relative overflow-hidden">
+    <div *ngIf="user; else guest"
+        class="max-w-lg mx-auto mt-12 p-8 bg-white rounded-2xl shadow-lg border border-gray-200 text-center">
+
+        <div class="flex flex-col items-center space-y-4">
+            <img
+                src="https://ui-avatars.com/api/?name={{ user.name }}&background=random&size=128"
+                alt="Profile Image"
+                class="w-32 h-32 rounded-full border-4 border-primary" />
+
+            <h2 class="text-3xl font-bold text-gray-800">Welcome, {{ user.name | titlecase }}</h2>
+
+            <div class="text-gray-600">
+                <p class="text-lg"><span class="font-semibold">Email:</span> {{
+                    user.email }}</p>
+            </div>
+
+            <div class="flex flex-wrap gap-2 justify-center mt-2">
+                <ng-container *ngFor="let role of user.roles">
+                    <span
+                        class="bg-primary text-white px-4 py-2 rounded capitalize">{{
+                        role }}</span>
+                </ng-container>
+            </div>
+
+            <button
+                (click)="logout()"
+                class="cursor-pointer mt-6 w-full bg-error text-white hover:bg-error-content hover:text-error py-2 rounded text-lg font-medium transition duration-200">
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <ng-template #guest>
+        <div
+            class="max-w-lg mx-auto mt-20 p-6 text-center bg-white rounded-2xl shadow-lg border border-gray-200">
+            <p class="text-xl text-gray-800 font-medium">You are not logged
+                in.</p>
+            <a
+                routerLink="/login"
+                class="inline-block mt-4 text-blue-600 hover:underline font-medium">
+                Go to Login
+            </a>
+        </div>
+    </ng-template>
+
+</section>

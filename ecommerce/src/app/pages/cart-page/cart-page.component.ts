@@ -3,6 +3,8 @@ import { CartService } from '../../services/cart.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouteEnum } from '../../enums/route.enum';
+import { OrdersService } from '../../services/order.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -13,7 +15,12 @@ import { RouteEnum } from '../../enums/route.enum';
 export class CartPageComponent implements OnInit {
   routeEnum = RouteEnum;
 
-  constructor(public cartService: CartService, private router: Router) {}
+  constructor(
+    public cartService: CartService,
+    private router: Router,
+    private orderService: OrdersService,
+    private authService: AuthService
+  ) {}
 
   async ngOnInit() {
     const userId = 1;
@@ -34,5 +41,13 @@ export class CartPageComponent implements OnInit {
 
   navigateToProduct(productId: number) {
     this.router.navigate(['/product', productId]);
+  }
+
+  checkout(){
+    const userId = this.authService.getUserData()?.id;
+    if (userId) {
+      this.orderService.placeOrder(userId);
+      
+    }
   }
 }
